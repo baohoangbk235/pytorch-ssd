@@ -23,6 +23,8 @@ class VOCDataset:
             image_sets_file = self.root / "ImageSets/Main/test.txt"
         else:
             image_sets_file = self.root / "ImageSets/Main/trainval.txt"
+            print(image_sets_file)
+
             
         if not os.path.isfile(image_sets_file):
             image_sets_default = self.root / "ImageSets/Main/default.txt"   # CVAT only saves default.txt
@@ -160,15 +162,13 @@ class VOCDataset:
                 np.array(is_difficult, dtype=np.uint8))
 
     def _find_image(self, image_id):
-        image_file = os.path.join(self.root, "JPEGImages/{:s}.jpg".format(image_id))
+        img_extensions = ('.jpg', '.JPG', '.jpeg', '.JPEG', '.png', '.PNG', '.bmp', '.BMP', '.tif', '.TIF', '.tiff', '.TIFF')
         
-        if os.path.exists(image_file):
-            return image_file
+        for ext in img_extensions:
+            image_file = os.path.join(self.root, "JPEGImages/{:s}{:s}".format(image_id, ext))
             
-        image_file = os.path.join(self.root, "JPEGImages/{:s}.JPG".format(image_id))
-        
-        if os.path.exists(image_file):
-            return image_file
+            if os.path.exists(image_file):
+                return image_file
             
         return None
         
